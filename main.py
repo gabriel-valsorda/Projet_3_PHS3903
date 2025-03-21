@@ -1,6 +1,6 @@
 import numpy as np
 
-import MonteCarlo as mc
+import domain
 
 # Definition du substrat
 N = 5 # Dimension
@@ -8,17 +8,24 @@ L = N # Largeur
 H = 2*L # Hauteur
 
 
-cristal = np.full([H,L],None)     # [hauteur, largeur]
+grid = np.full([H,L],None)     # [hauteur, largeur]
 
 # Initialisation de la première ranger (Na -> 1, Cl -> 0)
-cristal[0, ::2] = 1
-cristal[0, 1::2] = 0
+grid[0, ::2] = 1
+grid[0, 1::2] = 0
 
-'''Est ce qu'on fait la croissance épitaxial à partir du bas ou du haut 
-(est ce qu'on considère l'indice 0 comme le "sol" ou c'est l'indice -1)?'''
 
-print(cristal)
+print(grid)
+iteration = 5
+saved_grid = np.zeros([iteration,H,L])
 
-new = mc.method(cristal)
-print(new)
+for i in range(iteration):
+    saved_grid[i] = grid
+    grid = domain.kinetic_monte_carlo_step(grid)
+
+
+print(saved_grid)
+
+domain.plot_growth(grid)
+
 
