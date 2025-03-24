@@ -32,5 +32,6 @@ for i in range(iteration):
 
 
 # print(grid)
-domain.interatomic_distance(grid)
+a,b = domain.interatomic_distance(grid,2)
+print(a)
 
