@@ -1,5 +1,5 @@
 import numpy as np
-
+import interpreter
 import domain
 
 # Definition du substrat
@@ -15,7 +15,6 @@ grid[0, ::2] = 1
 grid[0, 1::2] = 0
 
 
-print(grid)
 iteration = 5
 saved_grid = np.zeros([iteration,H,L])
 
@@ -24,8 +23,14 @@ for i in range(iteration):
     grid = domain.kinetic_monte_carlo_step(grid)
 
 
-print(saved_grid)
 
-domain.plot_growth(grid)
+# print(saved_grid[-1])
+# print(domain.find_surface(grid))
 
+
+# interpreter.plot_growth(grid)
+
+
+# print(grid)
+domain.interatomic_distance(grid)
 
