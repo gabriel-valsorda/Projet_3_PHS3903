@@ -8,8 +8,8 @@ def find_surface(grid):
     Nx, Ny = grid.shape
     surface_sites = []  # Store the row index of surface sites
     
-    for j in range(Ny):  # Iterate over columns
-        for i in range(Nx):
+    for i in range(Nx):
+        for j in range(Ny):
             if grid[i, j] is None:
                 surface_sites.append([i,j])
                 break  # Stop at the first None in the column

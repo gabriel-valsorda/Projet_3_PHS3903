@@ -64,3 +64,28 @@ def KMC_3D(grid, P_a=0.8, P_e=0.1,iteration=5):
             new_grid[i, j, k] = 0
 
     return new_grid
+def KMC_2D(grid, P_a=0.8, P_e=0.1,iteration=5):
+    """
+    Perform one kinetic Monte Carlo step on the surface layer.
+    
+    Parameters:
+    - grid: NxN numpy array where None represents empty sites.
+    - P_a: Probability of adsorption (0 to 1).
+    - P_e: Probability of evaporation (0 to 1).
+    
+    Returns:
+    - Updated grid after one KMC step.
+    """
+    new_grid = grid.copy()
+    for i in range(iteration):
+        surface_sites = find_surface(new_grid)
+
+        site_choisit = surface_sites[np.random.randint(0, len(surface_sites))]
+
+        i, j = site_choisit
+        if new_grid[i, j-1] == 0:
+            new_grid[i, j] = 1
+        elif new_grid[i, j-1] == 1:
+            new_grid[i, j] = 0
+
+    return new_grid

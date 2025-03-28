@@ -23,7 +23,7 @@ grid[1::2,::2,0] = 0
 iteration = 5
 
 grid = fake_KMC.KMC_3D(grid,iteration=50)
-# interpreter.plot_3D_growth(grid)
+interpreter.plot_3D_growth(grid)
 
 grid
 

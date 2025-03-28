@@ -1,28 +1,25 @@
 import numpy as np
 import interpreter
 import domain
+import fake_KMC
 
 # Definition du substrat
-N = 5 # Dimension
-L = N # Largeur
-H = 2*L # Hauteur
 
+x = 5
+y = 10
 
-grid = np.full([H,L],None)     # [hauteur, largeur]
+grid = np.full([x,y],None)     # [hauteur, largeur]
 
 # Initialisation de la première ranger (Na -> 1, Cl -> 0)
-grid[0, ::2] = 1
-grid[0, 1::2] = 0
+grid[::2, 0] = 1
+grid[1::2, 0] = 0
 
 
 iteration = 5
-saved_grid = np.zeros([iteration,H,L])
+saved_grid = np.zeros([iteration,x,y])
 
-for i in range(iteration):
-    saved_grid[i] = grid
-    grid = domain.kinetic_monte_carlo_step(grid)
-
-
+grid = fake_KMC.KMC_2D(grid,iteration=10)
+print(grid)
 
 # print(saved_grid[-1])
 # print(domain.find_surface(grid))
@@ -32,6 +29,6 @@ for i in range(iteration):
 
 
 # print(grid)
-a,b = domain.interatomic_distance(grid,2)
-print(a)
+# a,b = domain.interatomic_distance(grid,2)
+# print(a)
 
