@@ -68,7 +68,8 @@ grid = KMC_2D(grid, iteration = 10)
 
 deltaE=[1 for i in range(len(grid))]
 
-def KMC2D_Laurent(config, deltaE, kT, deltamu, nb_pas_temps):
+def KMC2D_Laurent(config, deltaE, kT, deltamu, nb_pas_temps,gif):
+    deltatemps_reel=0
     os.makedirs("frames", exist_ok=True)
     N=len(config)
     T=295
@@ -128,6 +129,8 @@ def KMC2D_Laurent(config, deltaE, kT, deltamu, nb_pas_temps):
         # Cas désorption
         if evnt[1]==0:
             if config[site_changement][positions_surface[site_changement][1]-1]==None:
+                if gif==True:
+                    save_graph(config,iteration,deltatemps_reel)
                 continue
             config[site_changement][positions_surface[site_changement][1]-1]=None
             positions_surface[site_changement][1]-=1
@@ -146,14 +149,15 @@ def KMC2D_Laurent(config, deltaE, kT, deltamu, nb_pas_temps):
 
         # Étape 6  : Assigner un temps
         nombre_r_temps=np.random.rand()
-        deltatemps_reel=-1/(W*np.log(nombre_r_temps))
+        deltatemps_reel+=-1/(W*np.log(nombre_r_temps))
 
-        print(config)
-        save_graph(config,iteration)
+        
+        if gif==True:
+            save_graph(config,iteration,deltatemps_reel)
         
         
     return config, positions_surface, deltatemps_reel
 
 
-KMC2D_Laurent(grid, deltaE, kT=0.6, deltamu=-0.5,nb_pas_temps=15)
-creer_gif("frames")
+KMC2D_Laurent(grid, deltaE, kT=0.6, deltamu=-0.5,nb_pas_temps=15,gif=True)
+creer_gif("frames",fps=0.1)

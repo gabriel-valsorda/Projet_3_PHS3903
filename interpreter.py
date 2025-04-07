@@ -105,7 +105,7 @@ def plot_growth_2d(grid):
     plt.title("Epitaxial Growth (2D Tiles)")
     plt.show()
 
-def save_graph(grid,step):
+def save_graph(grid,step,tempsreel):
     """Draw a 2D square grid with different colors for 0, 1 and nothing for None."""
     os.makedirs("frames", exist_ok=True)
     nrows, ncols = len(grid), len(grid[0])
@@ -128,7 +128,8 @@ def save_graph(grid,step):
             # Add square at position (j, i)
             square = Rectangle((j, i), 1, 1, facecolor=color, edgecolor='black')
             ax.add_patch(square)
-    
+
+    plt.text(8.5, 0.5, f"{round(tempsreel,3)}s")
     plt.savefig(f"frames/frame_{int(step):03d}.png")
     plt.close()
     return
