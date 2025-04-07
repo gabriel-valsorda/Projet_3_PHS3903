@@ -127,6 +127,8 @@ def KMC2D_Laurent(config, deltaE, kT, deltamu, nb_pas_temps):
 
         # Cas désorption
         if evnt[1]==0:
+            if config[site_changement][positions_surface[site_changement][1]-1]==None:
+                continue
             config[site_changement][positions_surface[site_changement][1]-1]=None
             positions_surface[site_changement][1]-=1
         
@@ -153,5 +155,5 @@ def KMC2D_Laurent(config, deltaE, kT, deltamu, nb_pas_temps):
     return config, positions_surface, deltatemps_reel
 
 
-KMC2D_Laurent(grid, deltaE, kT=0.6, deltamu=-0.5,nb_pas_temps=7)
+KMC2D_Laurent(grid, deltaE, kT=0.6, deltamu=-0.5,nb_pas_temps=15)
 creer_gif("frames")
