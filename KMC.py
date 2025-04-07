@@ -1,6 +1,11 @@
 import numpy as np
 import scipy as sp
 import random as rand
+import os
+from domain import find_surface
+import matplotlib.pyplot as plt
+from interpreter import save_graph
+from interpreter import creer_gif
 
 import numpy as np
 
@@ -64,13 +69,14 @@ grid = KMC_2D(grid, iteration = 10)
 deltaE=[1 for i in range(len(grid))]
 
 def KMC2D_Laurent(config, deltaE, kT, deltamu, nb_pas_temps):
+    os.makedirs("frames", exist_ok=True)
     N=len(config)
     T=295
     kb=1.380649e-23
     kbT=kb*T
     positions_surface=find_surface(config)
 
-    for i in range(nb_pas_temps):
+    for iteration in range(nb_pas_temps):
         # Étape 1 : Générer la liste des 2N événements possibles
         #(site,0 = désorption ou 1 = adsorption)
         typeEvnt=[0,1]
@@ -141,8 +147,11 @@ def KMC2D_Laurent(config, deltaE, kT, deltamu, nb_pas_temps):
         deltatemps_reel=-1/(W*np.log(nombre_r_temps))
 
         print(config)
+        save_graph(config,iteration)
+        
         
     return config, positions_surface, deltatemps_reel
 
 
-KMC2D_Laurent(grid, deltaE, kT=0.6, deltamu=-0.5,nb_pas_temps=2)
+KMC2D_Laurent(grid, deltaE, kT=0.6, deltamu=-0.5,nb_pas_temps=7)
+creer_gif("frames")
