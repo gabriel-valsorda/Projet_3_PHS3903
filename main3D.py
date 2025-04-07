@@ -2,6 +2,7 @@ import numpy as np
 import domain_3D
 import fake_KMC
 import interpreter
+# from KMC import KMC2D_Laurent
 
 # Definition du substrat
 x = 5
@@ -24,6 +25,11 @@ iteration = 5
 
 grid = fake_KMC.KMC_3D(grid,iteration=50)
 interpreter.plot_3D_growth(grid)
+
+
+# grid, deltatemps_reel = KMC2D_Laurent(grid, deltaE=1, kT=0.6, deltamu=-0.5,pas_temps=2)
+print(grid)
+
 
 grid
 

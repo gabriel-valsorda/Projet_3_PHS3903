@@ -71,3 +71,34 @@ def plot_3D_growth(grid):
     ax.set_title("3D Epitaxial Growth")
 
     plt.show()
+import matplotlib.pyplot as plt
+import numpy as np
+from matplotlib.patches import Rectangle
+
+def plot_growth_2d(grid):
+    """Draw a 2D square grid with different colors for 0, 1 and nothing for None."""
+    nrows, ncols = len(grid), len(grid[0])
+    fig, ax = plt.subplots(figsize=(6, 6))
+    
+    ax.set_xlim(0, ncols)
+    ax.set_ylim(0, nrows)
+    ax.set_aspect('equal')
+    ax.invert_yaxis()  # Optional: flip so row 0 is at the top
+    # ax.axis('off')
+
+    for i in range(nrows):
+        for j in range(ncols):
+            val = grid[i][j]
+            if val == 0:
+                color = 'red'
+            elif val == 1:
+                color = 'blue'
+            else:
+                continue  # Skip None
+            
+            # Add square at position (j, i)
+            square = Rectangle((j, i), 1, 1, facecolor=color, edgecolor='black')
+            ax.add_patch(square)
+    
+    plt.title("Epitaxial Growth (2D Tiles)")
+    plt.show()

@@ -1,7 +1,7 @@
 import numpy as np
 import interpreter
 import domain
-import fake_KMC
+from KMC import KMC2D_Laurent
 
 # Definition du substrat
 
@@ -17,9 +17,10 @@ grid[1::2, 0] = 0
 
 iteration = 5
 saved_grid = np.zeros([iteration,x,y])
-
-grid = fake_KMC.KMC_2D(grid,iteration=10)
+for i in range(iteration):
+    grid, deltatemps_reel = KMC2D_Laurent(grid, deltaE=1, kT=0.6, deltamu=-0.5,pas_temps=2)
 print(grid)
+interpreter.plot_growth_2d(grid)
 
 # print(saved_grid[-1])
 # print(domain.find_surface(grid))
