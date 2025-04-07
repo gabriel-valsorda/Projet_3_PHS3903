@@ -66,7 +66,7 @@ grid = KMC_2D(grid, iteration = 10)
 
 
 
-deltaE=[1 for i in range(len(grid))]
+deltaE=[0.01 for i in range(len(grid))]
 
 def KMC2D_Laurent(config, deltaE, kT, deltamu, nb_pas_temps,gif):
     deltatemps_reel=0
