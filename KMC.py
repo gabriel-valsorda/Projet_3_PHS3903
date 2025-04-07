@@ -57,21 +57,20 @@ grid[::2, 0] = 1
 grid[1::2, 0] = 0
 
 grid = KMC_2D(grid, iteration = 10)
-print(grid)
-surface_initiale=find_surface(grid)
 
 
 
 
+deltaE=[1 for i in range(len(grid))]
 
-def KMC2D_Laurent(config, positions_surface, deltaE, kT, deltamu, pas_temps):
-    N=5
-    deltamu=5
+def KMC2D_Laurent(config, deltaE, kT, deltamu, nb_pas_temps):
+    N=len(config)
     T=295
     kb=1.380649e-23
     kbT=kb*T
+    positions_surface=find_surface(config)
 
-    for i in range(pas_temps):
+    for i in range(nb_pas_temps):
         # Étape 1 : Générer la liste des 2N événements possibles
         #(site,0 = désorption ou 1 = adsorption)
         typeEvnt=[0,1]
@@ -84,7 +83,7 @@ def KMC2D_Laurent(config, positions_surface, deltaE, kT, deltamu, pas_temps):
         # Étape 2 : Calcul des w de chaque événement
         deltamu=-0.5
         kT=0.6
-        deltaE=1
+
 
         w_liste=[]
         for i in listeEvnt:
@@ -92,7 +91,7 @@ def KMC2D_Laurent(config, positions_surface, deltaE, kT, deltamu, pas_temps):
                 w=np.exp(deltamu/kT)
                 w_liste.append(w)
             if i[1]==1:
-                w=np.exp(-deltaE/kT)
+                w=np.exp(-deltaE[i[0]]/kT)
                 w_liste.append(w)
         W=np.sum(w_liste)
 
@@ -143,7 +142,7 @@ def KMC2D_Laurent(config, positions_surface, deltaE, kT, deltamu, pas_temps):
 
         print(config)
         
-    return config, surface_initiale, deltatemps_reel
+    return config, positions_surface, deltatemps_reel
 
 
-KMC2D_Laurent(grid,surface_initiale, deltaE=1, kT=0.6, deltamu=-0.5,pas_temps=2)
+KMC2D_Laurent(grid, deltaE, kT=0.6, deltamu=-0.5,nb_pas_temps=2)
