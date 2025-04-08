@@ -11,3 +11,6 @@ def get_potential(distances, nom_dict) : #positions est du format [(nx,ny,nz),..
         pot_for_d = dict_pot.get(sorted(d))
         pot_total += pot_for_d if pot_for_d is not None else 0
     return pot_total
+
+def get_modif_potentiel(distances, nom_dict) : #positions est du format [(nx,ny,nz),...] (n>0) et dict_pot est le nom d'un fichier pickle
+    return 
