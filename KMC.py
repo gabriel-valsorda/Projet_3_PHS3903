@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 from interpreter import save_graph
 from interpreter import creer_gif
 
+
 import numpy as np
 
 def find_surface(grid):
@@ -69,6 +70,7 @@ grid = KMC_2D(grid, iteration = 10)
 deltaE=[0.01 for i in range(len(grid))]
 
 def KMC2D_Laurent(config, deltaE, kT, deltamu, nb_pas_temps,gif):
+    Ng=0
     deltatemps_reel=0
     os.makedirs("frames", exist_ok=True)
     N=len(config)
@@ -94,12 +96,13 @@ def KMC2D_Laurent(config, deltaE, kT, deltamu, nb_pas_temps,gif):
 
         w_liste=[]
         for i in listeEvnt:
-            if i[1]==0:
+            if i[1]==1:
                 w=np.exp(deltamu/kT)
                 w_liste.append(w)
-            if i[1]==1:
+            if i[1]==0:
                 w=np.exp(-deltaE[i[0]]/kT)
                 w_liste.append(w)
+
         W=np.sum(w_liste)
 
         # Étape 3 : Normalisation
@@ -118,6 +121,7 @@ def KMC2D_Laurent(config, deltaE, kT, deltamu, nb_pas_temps,gif):
             compteur+=1
         evnt=listeEvnt[compteur]
         if evnt[1]==1:
+            Ng+=1
             print(f"L'événement est une adsorption au site {evnt[0]}")
         if evnt[1]==0:
             print(f"L'événement est une désorption au site {evnt[0]}")
@@ -154,10 +158,25 @@ def KMC2D_Laurent(config, deltaE, kT, deltamu, nb_pas_temps,gif):
         
         if gif==True:
             save_graph(config,iteration,deltatemps_reel)
-        
-        
-    return config, positions_surface, deltatemps_reel
+
+        # Paramètres d'intérêt
+        wa=np.exp(deltamu/kT)
+        Gamma=Ng/(wa*deltatemps_reel)
+
+    return config, positions_surface, deltatemps_reel, Gamma
+
+def fct_rugosite(config):
+    N=len(config)
+    position_surface=find_surface(config)
+    position_rugosite=[(position[1]-1) for position in position_surface]
+    position_rugosite_carre=[(position[1]-1)**2 for position in position_surface]
+    rugosite=np.sqrt(1/N*sum(position_rugosite_carre)-(1/N*sum(position_rugosite))**2)
+    return rugosite
 
 
-KMC2D_Laurent(grid, deltaE, kT=0.6, deltamu=-0.5,nb_pas_temps=15,gif=True)
+
+config,pos_surface,dtr,Gamma=KMC2D_Laurent(grid, deltaE, kT=0.6, deltamu=-0.5,nb_pas_temps=30,gif=True)
+
+print(f"La rugosité est de {round(fct_rugosite(config),3)}")
+print(f"Le taux Γ est {round(Gamma,3)}")
 creer_gif("frames",fps=0.1)
