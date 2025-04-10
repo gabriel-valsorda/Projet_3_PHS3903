@@ -94,6 +94,7 @@ def KMC2D_Laurent(config, deltaE, kT, deltamu, pas_temps):
                 w=np.exp(deltamu/kT)
                 w_liste.append(w)
             if i[1]==1:
+                
                 w=np.exp(-deltaE/kT)
                 w_liste.append(w)
         W=np.sum(w_liste)

@@ -83,7 +83,7 @@ def plot_growth_2d(grid):
     ax.set_xlim(0, ncols)
     ax.set_ylim(0, nrows)
     ax.set_aspect('equal')
-    ax.invert_yaxis()  # Optional: flip so row 0 is at the top
+    # ax.invert_yaxis()  # Optional: flip so row 0 is at the top
     # ax.axis('off')
 
     for i in range(nrows):
@@ -97,8 +97,8 @@ def plot_growth_2d(grid):
                 continue  # Skip None
             
             # Add square at position (j, i)
-            square = Rectangle((j, i), 1, 1, facecolor=color, edgecolor='black')
+            square = Rectangle((i, j), 1, 1, facecolor=color, edgecolor='black')
             ax.add_patch(square)
-    
+    plt.gca().invert_xaxis()
     plt.title("Epitaxial Growth (2D Tiles)")
     plt.show()

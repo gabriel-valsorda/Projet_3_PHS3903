@@ -23,8 +23,8 @@ grid[1::2,::2,0] = 0
 # print(grid)
 iteration = 5
 
-grid = fake_KMC.KMC_3D(grid,iteration=50)
-interpreter.plot_3D_growth(grid)
+# grid = fake_KMC.KMC_3D(grid,iteration=50)
+# interpreter.plot_3D_growth(grid)
 
 
 # grid, deltatemps_reel = KMC2D_Laurent(grid, deltaE=1, kT=0.6, deltamu=-0.5,pas_temps=2)
