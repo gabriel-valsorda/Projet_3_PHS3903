@@ -141,7 +141,7 @@ def KMC2D_Laurent(config, deltaE, kT, deltamu, nb_pas_temps,gif):
         
         # Cas adsorption
         if evnt[1]==1:
-            # Si somme de position de surface et site changement et paire, alors le prochain est un 0
+            # Si somme de position de surface et site changement est paire, alors le prochain est un 1
             if (positions_surface[site_changement][1]+site_changement)%2==0:
                 config[site_changement][positions_surface[site_changement][1]]=1
                 positions_surface[site_changement][1]+=1
@@ -177,6 +177,14 @@ def fct_rugosite(config):
 
 config,pos_surface,dtr,Gamma=KMC2D_Laurent(grid, deltaE, kT=0.6, deltamu=-0.5,nb_pas_temps=30,gif=True)
 
+
+
+
+
+
+
+
 print(f"La rugosité est de {round(fct_rugosite(config),3)}")
 print(f"Le taux Γ est {round(Gamma,3)}")
 creer_gif("frames",fps=0.1)
+
