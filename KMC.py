@@ -4,14 +4,22 @@ import domain
 import os
 import interpreter
 
-def KMC2D(config,deltaE, temperature, deltamu, nb_pas_temps, gif):
+
+
+
+def KMC2D(config, kT, deltamu, nb_pas_temps, gif=False, gamma=False, rugosity=False):
     Ng=0
     deltatemps_reel=0
     os.makedirs("frames", exist_ok=True)
     N=len(config)
-    kb=1.380649
-    kT=kb*temperature
     
+    
+    # Initialisation des paramètres en fonction du temps
+    parametres=[]
+    if gamma:
+        Gamma = []
+    if rugosity:
+        Rugosity = []
 
     positions_surface = domain.find_surface(config)
 
@@ -32,6 +40,7 @@ def KMC2D(config,deltaE, temperature, deltamu, nb_pas_temps, gif):
                 w=np.exp(deltamu/kT)
                 w_liste.append(w)
             if i[1]==0:
+                deltaE = domain.potentiel(config)
                 w=np.exp(-deltaE[i[0]]/kT)
                 w_liste.append(w)
 
@@ -95,8 +104,21 @@ def KMC2D(config,deltaE, temperature, deltamu, nb_pas_temps, gif):
         if gif:
             interpreter.save_graph(config,iteration,deltatemps_reel)
 
-        # Paramètres d'intérêt
-        wa=np.exp(deltamu/kT)
-        Gamma=Ng/(wa*deltatemps_reel)
+        # Calculs des paramètres d'intérêt
+        if gamma:
+            # Paramètres d'intérêt
+            wa=np.exp(deltamu/kT)
+            Gamma.append(Ng/(wa*deltatemps_reel) )
+        if rugosity:
+            Rugosity.append(domain.fct_rugosite(positions_surface))
+    
 
-    return config, positions_surface, deltatemps_reel, Gamma
+    if gamma:
+        parametres.append(Gamma)
+    if rugosity:
+        parametres.append(Rugosity)
+
+    
+
+
+    return config, deltatemps_reel, parametres

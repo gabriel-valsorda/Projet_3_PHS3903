@@ -66,4 +66,13 @@ def save_grid(grid, path=''):
         writer = csv.writer(file)
         writer.writerows(grid)
 
-    
+def fct_rugosite(position_surface):
+    N = len(position_surface)
+    position_rugosite=[(position[1]-1) for position in position_surface]
+    position_rugosite_carre=[(position[1]-1)**2 for position in position_surface]
+    rugosite=np.sqrt(1/N*sum(position_rugosite_carre)-(1/N*sum(position_rugosite))**2)
+    return rugosite
+
+
+def potentiel(config):
+    return [1e1 for i in range(len(config))]
