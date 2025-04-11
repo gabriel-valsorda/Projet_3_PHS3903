@@ -1,12 +1,16 @@
 
 import numpy as np
+import domain
 
-def KMC2D_Laurent(config, positions_surface, deltaE, kT, deltamu, pas_temps):
+def KMC2D(config, deltaE, kT, deltamu, pas_temps):
     N=5
     deltamu=5
     T=295
     kb=1.380649e-23
     kbT=kb*T
+
+    positions_surface = domain.find_surface(config)
+
 
     for i in range(pas_temps):
         # Étape 1 : Générer la liste des 2N événements possibles
@@ -80,4 +84,4 @@ def KMC2D_Laurent(config, positions_surface, deltaE, kT, deltamu, pas_temps):
 
         print(config)
         
-    return config, surface_initiale, deltatemps_reel
+    return config, positions_surface, deltatemps_reel
