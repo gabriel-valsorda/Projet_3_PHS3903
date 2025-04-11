@@ -1,7 +1,10 @@
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
+import os
+import imageio
 
-def plot_growth_2d(grid):
+
+def plot_growth_2d(grid,show=True):
     """Draw a 2D square grid with different colors for 0, 1 and nothing for None."""
     nrows, ncols = len(grid), len(grid[0])
     fig, ax = plt.subplots(figsize=(6, 6))
@@ -25,9 +28,12 @@ def plot_growth_2d(grid):
             # Add square at position (j, i)
             square = Rectangle((i, j), 1, 1, facecolor=color, edgecolor='black')
             ax.add_patch(square)
+    
+    
     plt.gca().invert_xaxis()
     plt.title("Epitaxial Growth (2D Tiles)")
-    plt.show()
+    if show:
+        plt.show()
 
 
 def plot_3D_growth(grid):
@@ -70,3 +76,27 @@ def plot_3D_growth(grid):
     ax.set_title("3D Epitaxial Growth")
 
     plt.show()
+
+def save_graph(grid,step,tempsreel):
+    """Draw a 2D square grid with different colors for 0, 1 and nothing for None."""
+    os.makedirs("frames", exist_ok=True)
+
+    plot_growth_2d(grid=grid,show=False)
+    
+    plt.text(8.5, 0.5, f"{round(tempsreel,3)}s")
+    plt.savefig(f"frames/frame_{int(step):03d}.png")
+    plt.close()
+    return
+
+def creer_gif(dossier, nom_gif="evolution.gif", fps=0.5):
+    fichiers = sorted(
+        [f for f in os.listdir(dossier) if f.endswith(".png")]
+    )
+    chemin_gif = os.path.join(dossier, nom_gif)
+    
+    with imageio.get_writer(chemin_gif, mode='I', duration=1/fps) as writer:
+        for nom in fichiers:
+            image = imageio.imread(os.path.join(dossier, nom))
+            writer.append_data(image)
+
+    print(f"GIF enregistré dans : {chemin_gif}")

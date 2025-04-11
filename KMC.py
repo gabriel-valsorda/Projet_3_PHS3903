@@ -1,18 +1,21 @@
 
 import numpy as np
 import domain
+import os
+import interpreter
 
-def KMC2D(config, deltaE, kT, deltamu, pas_temps):
-    N=5
-    deltamu=5
-    T=295
+def KMC2D(config, temperature, deltamu, nb_pas_temps, gif):
+    Ng=0
+    deltatemps_reel=0
+    os.makedirs("frames", exist_ok=True)
+    N=len(config)
     kb=1.380649e-23
-    kbT=kb*T
+    kT=kb*temperature
+    deltaE=[0.01 for i in range(len(config))]
 
     positions_surface = domain.find_surface(config)
 
-
-    for i in range(pas_temps):
+    for iteration in range(nb_pas_temps):
         # Étape 1 : Générer la liste des 2N événements possibles
         #(site,0 = désorption ou 1 = adsorption)
         typeEvnt=[0,1]
@@ -23,18 +26,16 @@ def KMC2D(config, deltaE, kT, deltamu, pas_temps):
                 listeEvnt.append((site,adOuDes))
 
         # Étape 2 : Calcul des w de chaque événement
-        deltamu=-0.5
-        kT=0.6
-        deltaE=1
 
         w_liste=[]
         for i in listeEvnt:
-            if i[1]==0:
+            if i[1]==1:
                 w=np.exp(deltamu/kT)
                 w_liste.append(w)
-            if i[1]==1:
-                w=np.exp(-deltaE/kT)
+            if i[1]==0:
+                w=np.exp(-deltaE[i[0]]/kT)
                 w_liste.append(w)
+
         W=np.sum(w_liste)
 
         # Étape 3 : Normalisation
@@ -51,8 +52,13 @@ def KMC2D(config, deltaE, kT, deltamu, pas_temps):
             if somme>nombre_r:
                 break
             compteur+=1
+        
+        # print(compteur)
+        # print(len(listeEvnt))
+        # print(listeEvnt)
         evnt=listeEvnt[compteur]
         if evnt[1]==1:
+            Ng+=1
             print(f"L'événement est une adsorption au site {evnt[0]}")
         if evnt[1]==0:
             print(f"L'événement est une désorption au site {evnt[0]}")
@@ -63,6 +69,10 @@ def KMC2D(config, deltaE, kT, deltamu, pas_temps):
 
         # Cas désorption
         if evnt[1]==0:
+            if config[site_changement][positions_surface[site_changement][1]-1]==None:
+                if gif:
+                    interpreter.save_graph(config,iteration,deltatemps_reel)
+                continue
             config[site_changement][positions_surface[site_changement][1]-1]=None
             positions_surface[site_changement][1]-=1
         
@@ -80,8 +90,14 @@ def KMC2D(config, deltaE, kT, deltamu, pas_temps):
 
         # Étape 6  : Assigner un temps
         nombre_r_temps=np.random.rand()
-        deltatemps_reel=-1/(W*np.log(nombre_r_temps))
+        deltatemps_reel+=-1/(W*np.log(nombre_r_temps))
 
-        print(config)
         
-    return config, positions_surface, deltatemps_reel
+        if gif:
+            interpreter.save_graph(config,iteration,deltatemps_reel)
+
+        # Paramètres d'intérêt
+        wa=np.exp(deltamu/kT)
+        Gamma=Ng/(wa*deltatemps_reel)
+
+    return config, positions_surface, deltatemps_reel, Gamma
