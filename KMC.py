@@ -61,10 +61,7 @@ def KMC2D(config, kT, deltamu, nb_pas_temps, gif=False, gamma=False, rugosity=Fa
             if somme>nombre_r:
                 break
             compteur+=1
-        
-        # print(compteur)
-        # print(len(listeEvnt))
-        # print(listeEvnt)
+    
         evnt=listeEvnt[compteur]
         if evnt[1]==1:
             Ng+=1
