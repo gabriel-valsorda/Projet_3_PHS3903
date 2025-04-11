@@ -4,14 +4,14 @@ import domain
 import os
 import interpreter
 
-def KMC2D(config, temperature, deltamu, nb_pas_temps, gif):
+def KMC2D(config,deltaE, temperature, deltamu, nb_pas_temps, gif):
     Ng=0
     deltatemps_reel=0
     os.makedirs("frames", exist_ok=True)
     N=len(config)
-    kb=1.380649e-23
+    kb=1.380649
     kT=kb*temperature
-    deltaE=[0.01 for i in range(len(config))]
+    
 
     positions_surface = domain.find_surface(config)
 
@@ -26,7 +26,6 @@ def KMC2D(config, temperature, deltamu, nb_pas_temps, gif):
                 listeEvnt.append((site,adOuDes))
 
         # Étape 2 : Calcul des w de chaque événement
-
         w_liste=[]
         for i in listeEvnt:
             if i[1]==1:

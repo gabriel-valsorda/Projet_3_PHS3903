@@ -37,6 +37,7 @@ def find_surface(grid):
     
     return surface_sites
 
+
 def find_ions(grid):
     '''
     Trouver tous les sites occupes par les ions Na et Cl 
