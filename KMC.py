@@ -28,6 +28,7 @@ def KMC2D(config, kT, deltamu, nb_pas_temps, gif=False, gamma=False, rugosity=Fa
         #(site,0 = désorption ou 1 = adsorption)
         typeEvnt=[0,1]
         listeEvnt=[]
+        
 
         for site in range(N):
             for adOuDes in typeEvnt:
@@ -86,6 +87,9 @@ def KMC2D(config, kT, deltamu, nb_pas_temps, gif=False, gamma=False, rugosity=Fa
         
         # Cas adsorption
         if evnt[1]==1:
+            if positions_surface[site_changement][1] == config.shape[1]-1:
+                print("La configuration a atteint le plafond")
+                break
             # Si somme de position de surface et site changement et paire, alors le prochain est un 0
             if (positions_surface[site_changement][1]+site_changement)%2==0:
                 config[site_changement][positions_surface[site_changement][1]]=1
