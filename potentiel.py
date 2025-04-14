@@ -4,7 +4,7 @@ import pickle
 from domain import find_surface, find_ions
 from scipy import constants as sp_const
 
-def get_potential(distances, nom_dict) : #positions est du format [(nx,ny,nz),...] (n>0) et dict_pot est le nom d'un fichier pickle
+def get_potential(distances, nom_dict='energie_directe.pkl') : #positions est du format [(nx,ny,nz),...] (n>0) et dict_pot est le nom d'un fichier pickle
     with open(f'{nom_dict}.pkl') as f:
         dict_pot = pickle.load(f)
     f.close()
