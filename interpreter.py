@@ -4,7 +4,7 @@ import os
 import imageio
 from numpy import linspace
 
-def plot_growth_2d(grid,show=True):
+def plot_growth_2d(grid,save=True):
     """Draw a 2D square grid with different colors for 0, 1 and nothing for None."""
     nrows, ncols = grid.shape[0], grid.shape[1]
     fig, ax = plt.subplots(figsize=(6, 6))
@@ -32,8 +32,9 @@ def plot_growth_2d(grid,show=True):
     
     plt.gca().invert_xaxis()
     plt.title("Epitaxial Growth (2D Tiles)")
-    if show:
-        plt.show()
+    if save:
+        plt.savefig("frames/frame.png")
+    plt.show()
 
 
 def plot_3D_growth(grid):
