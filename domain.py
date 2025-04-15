@@ -1,4 +1,5 @@
 import numpy as np
+import time
 
 def create_grid(x, y, hauteur_initial=None):
     """
@@ -74,5 +75,47 @@ def fct_rugosite(position_surface):
     return rugosite
 
 
-def potentiel(config):
-    return [1e1 for i in range(len(config))]
+
+def potentiel(grille, Evnt, positions_surface):
+
+    #caractéristiques de la grille et de l'événement
+    largeur = len(grille)
+    N = int(500/largeur)
+    nx = Evnt[0]
+    ny = positions_surface[nx][1]-1
+    signe = (-1)**(nx+ny) 
+    a = 5.64e-10  # Lattice constant in meters (example value, adjust as needed)
+    facteur = -(signe)
+    posNa, posCL = find_ions(grille)
+
+    # On calcule Delta E dans le réseau direct pour les atomes dans un rayon plus petit que 100 
+    potentiel_total = []
+    compteur = 0
+    start_time = time.time()
+
+    #Calcul pour les Na+
+    for pos in posNa:
+        if pos == [0,10] : print('Na!')
+        for l in range(-N,N):
+            compteur += 1
+            x = pos[0]+l*largeur
+            y = pos[1]
+            r = np.sqrt((x-nx)**2 + (y-ny)**2)
+            if r == 0 or r > 200: continue
+            potentiel_Na = 1/r
+            potentiel_total.append(potentiel_Na)
+    #Calcul pour les Cl-
+    for pos in posCL:
+        for l in range(-N,N):
+            compteur += 1
+            x = pos[0]+l*largeur
+            y = pos[1]
+            r = np.sqrt((x-nx)**2 + (y-ny)**2)
+            if r == 0 or r > 200: continue
+            potentiel_Cl = -1/r
+            potentiel_total.append(potentiel_Cl)
+
+    #temps de calcul pour le potentiel total
+    end_time = time.time()
+    elapsed_time = end_time - start_time 
+    return sum(sorted(potentiel_total, key=lambda x: abs(x)))*facteur #permet de minimiser l'erreur numérique

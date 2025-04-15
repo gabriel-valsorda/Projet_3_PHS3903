@@ -41,8 +41,8 @@ def KMC2D(config, kT, deltamu, nb_pas_temps, gif=False, gamma=False, rugosity=Fa
                 w=np.exp(deltamu/kT)
                 w_liste.append(w)
             if i[1]==0:
-                deltaE = domain.potentiel(config)
-                w=np.exp(-deltaE[i[0]]/kT)
+                deltaE = domain.potentiel(config,i,positions_surface)
+                w=np.exp(-deltaE/kT)
                 w_liste.append(w)
 
         W=np.sum(w_liste)
@@ -104,6 +104,7 @@ def KMC2D(config, kT, deltamu, nb_pas_temps, gif=False, gamma=False, rugosity=Fa
         
         if gif:
             interpreter.save_graph(config,iteration,deltatemps_reel)
+            interpreter.creer_gif("frames")
 
         # Calculs des paramètres d'intérêt
         if gamma:
