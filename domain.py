@@ -95,7 +95,6 @@ def potentiel(grille, Evnt, positions_surface):
 
     #Calcul pour les Na+
     for pos in posNa:
-        if pos == [0,10] : print('Na!')
         for l in range(-N,N):
             compteur += 1
             x = pos[0]+l*largeur

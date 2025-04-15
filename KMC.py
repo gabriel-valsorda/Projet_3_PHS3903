@@ -104,7 +104,6 @@ def KMC2D(config, kT, deltamu, nb_pas_temps, gif=False, gamma=False, rugosity=Fa
         
         if gif:
             interpreter.save_graph(config,iteration,deltatemps_reel)
-            interpreter.creer_gif("frames")
 
         # Calculs des paramètres d'intérêt
         if gamma:
