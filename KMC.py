@@ -7,7 +7,7 @@ import interpreter
 
 
 
-def KMC2D(config, kT, deltamu, nb_pas_temps, gif=False, gamma=False, rugosity=False,nb_atomes_substrat):
+def KMC2D(config, kT, deltamu, nb_pas_temps,nb_atomes_substrat, gif=False, gamma=False, rugosity=False):
     Ng=0
     deltatemps_reel=0
     os.makedirs("frames", exist_ok=True)
