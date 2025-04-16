@@ -112,8 +112,8 @@ def KMC2D(config, kT, deltamu, nb_pas_temps, gif=False, gamma=False, rugosity=Fa
 
 
         # Étape 6  : Assigner un temps
-        nombre_r_temps=np.random.rand()
-        deltatemps_reel+=-1/(W*np.log(nombre_r_temps))
+        nombre_r_temps = np.random.rand()
+        deltatemps_reel += -1 / (W*np.log(nombre_r_temps))
 
         
         if gif:
@@ -122,8 +122,8 @@ def KMC2D(config, kT, deltamu, nb_pas_temps, gif=False, gamma=False, rugosity=Fa
         # Calculs des paramètres d'intérêt
         if gamma:
             # Paramètres d'intérêt
-            wa=np.exp(deltamu/kT)
-            Gamma.append(Ng/(wa*deltatemps_reel) )
+            wa=np.exp(deltamu / kT)
+            Gamma.append(Ng / (wa*deltatemps_reel) )
         if rugosity:
             Rugosity.append(domain.fct_rugosite(positions_surface))
     
