@@ -7,7 +7,7 @@ import interpreter
 
 
 
-def KMC2D(config, kT, deltamu, nb_pas_temps,nb_atomes_substrat, gif=False, gamma=False, rugosity=False):
+def KMC2D(config, kT, deltamu, nb_pas_temps, gif=False, gamma=False, rugosity=False):
     Ng=0
     deltatemps_reel=0
     os.makedirs("frames", exist_ok=True)
@@ -66,6 +66,7 @@ def KMC2D(config, kT, deltamu, nb_pas_temps,nb_atomes_substrat, gif=False, gamma
         evnt=listeEvnt[compteur]
         if evnt[1]==1:
             nb_atomes_final+=1
+            Ng+=1
             print(f"L'événement est une adsorption au site {evnt[0]}")
         if evnt[1]==0:
             print(f"L'événement est une désorption au site {evnt[0]}")
@@ -109,7 +110,6 @@ def KMC2D(config, kT, deltamu, nb_pas_temps,nb_atomes_substrat, gif=False, gamma
         # Calculs des paramètres d'intérêt
         if gamma:
             # Paramètres d'intérêt
-            Ng=nb_atomes_final-nb_atomes_substrat
             wa=np.exp(deltamu/kT)
             Gamma.append(Ng/(wa*deltatemps_reel))
         if rugosity:

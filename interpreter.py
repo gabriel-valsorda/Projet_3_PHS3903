@@ -31,7 +31,7 @@ def plot_growth_2d(grid,show=True):
     
     
     plt.gca().invert_xaxis()
-    plt.title("Epitaxial Growth (2D Tiles)")
+    plt.title("Croissance épitaxiale")
     if show:
         plt.show()
 
@@ -83,12 +83,12 @@ def save_graph(grid,step,tempsreel):
 
     plot_growth_2d(grid=grid,show=False)
     
-    plt.text(8.5, 0.5, f"{round(tempsreel,3)}s")
+    # plt.text(8.5, 0.5, f"{round(tempsreel,3)}s")
     plt.savefig(f"frames/frame_{int(step):03d}.png")
     plt.close()
     return
 
-def creer_gif(dossier, nom_gif="evolution.gif", fps=0.5):
+def creer_gif(dossier, nom_gif="evolution.gif", fps=10):
     fichiers = sorted(
         [f for f in os.listdir(dossier) if f.endswith(".png")]
     )
