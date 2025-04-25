@@ -102,11 +102,11 @@ def calcul_de_temps(x,y,iteration):
 
     # Affichage
     plt.figure()
-    plt.title(f'Temps de calcul pour l\'énergie électrostatique \npour un substrats de {x}x{y} ({iteration} itération{"s" if iteration > 1 else ""})')
+    plt.title(f'Temps de calcul pour l\'énergie électrostatique \npour un substrats de {x}x{y} ({iteration} itération{"s" if iteration > 1 else ""})', fontsize=16)
     plt.errorbar(hauteurs, mean_times, yerr=std_times, fmt='.', markersize=10, capsize=5, label='Temps moyen ± écart-type')
     plt.plot(hauteurs, linear_model(hauteurs, *popt), 'r-', linewidth=1, label=f'Régression linéaire')
-    plt.xlabel('Hauteur (pixels)')
-    plt.ylabel('Temps moyen (s)')
+    plt.xlabel('Hauteur (pixels)', fontsize=16)
+    plt.ylabel('Temps moyen (s)', fontsize=16)
     plt.grid()
     plt.legend()
     plt.savefig(f'temps_potentiel_{x}x{y}.png', dpi=300)
