@@ -7,7 +7,7 @@ import interpreter
 
 
 
-def KMC2D(config, kT, deltamu, nb_pas_temps, gif=False, gamma=False, rugosity=False):
+def KMC2D(config,positions_surface, kT, deltamu, nb_pas_temps, gif=False, gamma=False, rugosity=False):
     Ng=0
     deltatemps_reel=0
     os.makedirs("frames", exist_ok=True)
@@ -22,34 +22,40 @@ def KMC2D(config, kT, deltamu, nb_pas_temps, gif=False, gamma=False, rugosity=Fa
     if rugosity:
         Rugosity = []
 
-    positions_surface = domain.find_surface(config)
+
 
     for iteration in range(nb_pas_temps):
         # Étape 1 : Générer la liste des 2N événements possibles
-        #(site,0 = désorption ou 1 = adsorption)
-        typeEvnt=[0,1]
+        #(site,0 = désorption, 1 = adsorption, 2 = diffusion)
+        typeEvnt=[0,1,2]
         listeEvnt=[]
         
 
         for site in range(N):
-            for adOuDes in typeEvnt:
-                listeEvnt.append((site,adOuDes))
+            for adOuDesouDiff in typeEvnt:
+                listeEvnt.append((site,adOuDesouDiff))
 
         # Étape 2 : Calcul des w de chaque événement
         w_liste=[]
         for i in listeEvnt:
-            if i[1]==1:
-                w=np.exp(deltamu/kT)
-                w_liste.append(w)
+
             if i[1]==0:
                 deltaE = domain.potentiel(config,i,positions_surface)
                 w=np.exp(-deltaE/kT)
                 w_liste.append(w)
 
+            if i[1]==1:
+                w=np.exp(deltamu/kT)
+                w_liste.append(w)
+
+            if i[1]==2:
+                w=np.exp(deltamu/(2*kT))  #TAUX ARBITRAIRE PAS PHYISIQUE
+                w_liste.append(w)
+
         W=np.sum(w_liste)
 
         # Étape 3 : Normalisation
-        w_normalisee=[w/W for w in w_liste]
+        w_normalisee=w_liste/W
 
         # Étape 4 : On génère un nombre aléatoire en 0 et 1 et on choisit le premier événement qui a une proba cumulée supérieure à r.
         nombre_r=np.random.rand()
@@ -67,22 +73,120 @@ def KMC2D(config, kT, deltamu, nb_pas_temps, gif=False, gamma=False, rugosity=Fa
         if evnt[1]==1:
             nb_atomes_final+=1
             Ng+=1
-            print(f"L'événement est une adsorption au site {evnt[0]}")
+            print(f"{iteration}  L'événement est une adsorption au site {evnt[0]}")
         if evnt[1]==0:
-            print(f"L'événement est une désorption au site {evnt[0]}")
+            Ng-=1     
+            print(f"{iteration}  L'événement est une désorption au site {evnt[0]}")
         
 
         # Étape 5 : Nouvelle configuration
         site_changement=evnt[0]
 
+        # Cas diffusion
+        # On détermine si l'atome est un Na ou Cl
+        if ((positions_surface[site_changement][1]-1)+site_changement)%2==0:
+            atome='Na'
+        else : 
+            atome='Cl'
+        
+
+        if evnt[1]==2: #ALORS ON A UNE DIFFUSION! ON TROUVE DONC LE PLUS PROCHE SITE COMPATIBLE
+
+            #Itération sur les atomes de droite
+            droite=site_changement+1
+            if droite>len(positions_surface)-1:
+                droite=droite-len(positions_surface)-1
+            parite=((positions_surface[droite][1]-1)+droite)%2
+            if parite==0:
+                sitedroite='Na'
+            else :
+                sitedroite='Cl'
+            while sitedroite==atome:
+                droite+=1
+                if droite >= len(positions_surface):
+                    droite -= len(positions_surface)
+                parite=((positions_surface[droite][1]-1)+droite)%2
+                if parite==0:
+                    sitedroite='Na'
+                else :
+                    sitedroite='Cl'
+            if droite>site_changement:
+                proximite_droite=droite-site_changement
+            else :
+                proximite_droite=droite+(len(positions_surface)-site_changement)
+            
+
+            #Itération sur les atomes de gauche
+            gauche=site_changement-1
+            parite=((positions_surface[gauche][1]-1)+gauche)%2
+            if parite==0:
+                sitegauche='Na'
+            else :
+                sitegauche='Cl'
+            while sitegauche==atome:
+                print('égal')
+                gauche-=1
+                parite=((positions_surface[gauche][1]-1)+gauche)%2
+                if parite==0:
+                    sitegauche='Na'
+                else :
+                    sitegauche='Cl'
+            proximite_gauche=site_changement-gauche
+
+
+            if proximite_droite<proximite_gauche:
+                #ON A ALORS DIFFUSION À DROITE
+                print(f"{iteration}  Diffusion à droite du site {site_changement} vers le site {droite}")
+                config[site_changement][positions_surface[site_changement][1]-1]=None
+                if atome=='Na':
+                    config[droite][positions_surface[droite][1]]=1
+                else:
+                    config[droite][positions_surface[droite][1]]=0
+                positions_surface[site_changement][1]-=1
+                positions_surface[droite][1]+=1
+            
+            if proximite_gauche<proximite_droite:
+                #ON A ALORS DIFFUSION À GAUCHE
+                print(f"{iteration}  Diffusion à gauche du site {site_changement} vers le site {gauche}")
+                config[site_changement][positions_surface[site_changement][1]-1]=None
+                if atome=='Na':
+                    config[gauche][positions_surface[gauche][1]]=1
+                else :
+                    config[gauche][positions_surface[gauche][1]]=0
+                positions_surface[site_changement][1]-=1
+                positions_surface[gauche][1]+=1
+
+            if proximite_gauche==proximite_droite:
+                #ON A ALORS DIFFUSION ÉQUIPROBABLE DE CHAQUE BORD
+                rprimeprime=np.random.rand()
+                if rprimeprime<=0.5:
+                    #diffusion à droite
+                    print(f"{iteration}  Diffusion à droite du site {site_changement} vers le site {droite}")
+                    config[site_changement][positions_surface[site_changement][1]-1]=None
+                    if atome=='Na':
+                        config[droite][positions_surface[droite][1]]=1
+                    else : 
+                        config[droite][positions_surface[droite][1]]=0
+                    positions_surface[site_changement][1]-=1
+                    positions_surface[droite][1]+=1
+
+                if rprimeprime>0.5:
+                    #diffusion à gauche
+                    print(f"{iteration}  Diffusion à gauche du site {site_changement} vers le site {gauche}")
+                    config[site_changement][positions_surface[site_changement][1]-1]=None
+                    if atome=='Na':
+                        config[gauche][positions_surface[gauche][1]]=1
+                    else : 
+                        config[gauche][positions_surface[gauche][1]]=0
+                    positions_surface[site_changement][1]-=1
+                    positions_surface[gauche][1]+=1
+            
+
         # Cas désorption
         if evnt[1]==0:
-            if config[site_changement][positions_surface[site_changement][1]-1]==None:
-                if gif:
-                    interpreter.save_graph(config,iteration,deltatemps_reel)
-                continue
             config[site_changement][positions_surface[site_changement][1]-1]=None
             positions_surface[site_changement][1]-=1
+            
         
         # Cas adsorption
         if evnt[1]==1:
@@ -124,4 +228,4 @@ def KMC2D(config, kT, deltamu, nb_pas_temps, gif=False, gamma=False, rugosity=Fa
     
 
 
-    return config, deltatemps_reel, parametres
+    return config, deltatemps_reel, parametres, positions_surface
