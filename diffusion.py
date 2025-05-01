@@ -13,14 +13,17 @@ def probabilite_diffusion(l, l_max, E_l, kT, kT_iso):
 
 
 def Diffusion(surface, Evnt, gamma_0):
+    # ajout des cotes
+    surface = [surface[-1]] + surface + [surface[0]]
+    
     position = Evnt[0]
-    print(position)
     norm = np.linalg.norm(position)
     largeur = len(surface)
     N = int(1000/largeur)
     nx = position[0]
     ny = surface[nx][1]-1
-
+    
+    
     # Liste des sites disponible pour la diffustion
     if sum(position)%2 == 0: # pair (Na)
         site_dispo = [site for site in surface if sum(site)%2 == 0]
@@ -79,8 +82,6 @@ grid[8,3] = 0
 surface = domain.find_surface(grid)
 
 Diffusion(surface, ([0,3],1),0)
-
-
 
 
 
