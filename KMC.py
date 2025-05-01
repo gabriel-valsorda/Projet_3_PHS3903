@@ -29,6 +29,7 @@ def KMC2D(config,positions_surface, kT, deltamu, nb_pas_temps, gif=False, gamma=
         #(site,0 = désorption, 1 = adsorption, 2 = diffusion)
         typeEvnt=[0,1,2]
         listeEvnt=[]
+        tousmeme=False
         
 
         for site in range(N):
@@ -101,7 +102,9 @@ def KMC2D(config,positions_surface, kT, deltamu, nb_pas_temps, gif=False, gamma=
                 sitedroite='Na'
             else :
                 sitedroite='Cl'
+            nb_while=0
             while sitedroite==atome:
+                nb_while+=1
                 droite+=1
                 if droite >= len(positions_surface):
                     droite -= len(positions_surface)
@@ -110,20 +113,31 @@ def KMC2D(config,positions_surface, kT, deltamu, nb_pas_temps, gif=False, gamma=
                     sitedroite='Na'
                 else :
                     sitedroite='Cl'
+                if nb_while>len(config):
+                    tousmeme=True
+                    break
             if droite>site_changement:
+                if tousmeme:
+                    continue
                 proximite_droite=droite-site_changement
             else :
+                if tousmeme:
+                    continue
                 proximite_droite=droite+(len(positions_surface)-site_changement)
             
 
             #Itération sur les atomes de gauche
+            
             gauche=site_changement-1
             parite=((positions_surface[gauche][1]-1)+gauche)%2
             if parite==0:
                 sitegauche='Na'
             else :
                 sitegauche='Cl'
+
+            nb_while=0
             while sitegauche==atome:
+                nb_while+=1
                 print('égal')
                 gauche-=1
                 parite=((positions_surface[gauche][1]-1)+gauche)%2
@@ -131,6 +145,11 @@ def KMC2D(config,positions_surface, kT, deltamu, nb_pas_temps, gif=False, gamma=
                     sitegauche='Na'
                 else :
                     sitegauche='Cl'
+                if nb_while>len(config):
+                    tousmeme=True
+                    break
+                if tousmeme:
+                    continue
             proximite_gauche=site_changement-gauche
 
 
