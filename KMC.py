@@ -154,7 +154,7 @@ def KMC2D(config,positions_surface, kT, deltamu, nb_pas_temps, gif=False, gamma=
 
             if proximite_droite<proximite_gauche:
                 #ON A ALORS DIFFUSION À DROITE
-                print(f"{iteration}  Diffusion à droite du site {site_changement} vers le site {droite}")
+                # print(f"{iteration}  Diffusion à droite du site {site_changement} vers le site {droite}")
                 config[site_changement][positions_surface[site_changement][1]-1]=None
                 if atome=='Na':
                     config[droite][positions_surface[droite][1]]=1
@@ -165,7 +165,7 @@ def KMC2D(config,positions_surface, kT, deltamu, nb_pas_temps, gif=False, gamma=
             
             if proximite_gauche<proximite_droite:
                 #ON A ALORS DIFFUSION À GAUCHE
-                print(f"{iteration}  Diffusion à gauche du site {site_changement} vers le site {gauche}")
+                # print(f"{iteration}  Diffusion à gauche du site {site_changement} vers le site {gauche}")
                 config[site_changement][positions_surface[site_changement][1]-1]=None
                 if atome=='Na':
                     config[gauche][positions_surface[gauche][1]]=1
