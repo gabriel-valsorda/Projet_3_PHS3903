@@ -138,7 +138,6 @@ def KMC2D(config,positions_surface, kT, deltamu, nb_pas_temps, gif=False, gamma=
             nb_while=0
             while sitegauche==atome:
                 nb_while+=1
-                print('égal')
                 gauche-=1
                 parite=((positions_surface[gauche][1]-1)+gauche)%2
                 if parite==0:
