@@ -7,7 +7,7 @@ import interpreter
 
 
 
-def KMC2D(config,positions_surface, kT, deltamu, nb_pas_temps, gif=False, gamma=False, rugosity=False):
+def KMC2D_aveccoms(config,positions_surface, kT, deltamu, nb_pas_temps, gif=False, gamma=False, rugosity=False):
     Ng=0
     deltatemps_reel=0
     os.makedirs("frames", exist_ok=True)
