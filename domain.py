@@ -1,6 +1,7 @@
 import numpy as np
 import time
 
+
 def create_grid(x, y, hauteur_initial=None):
     """
     Create a 2D grid of size x by y, initialized with None.
