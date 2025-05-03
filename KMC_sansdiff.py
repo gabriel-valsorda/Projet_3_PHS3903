@@ -3,8 +3,7 @@ import numpy as np
 import domain
 import os
 import interpreter
-
-
+import potentiel_2D
 
 
 def KMC2D_sansdiff(config,positions_surface, kT, deltamu, nb_pas_temps, gif=False, gamma=False, rugosity=False):
@@ -71,10 +70,10 @@ def KMC2D_sansdiff(config,positions_surface, kT, deltamu, nb_pas_temps, gif=Fals
         if evnt[1]==1:
             nb_atomes_final+=1
             Ng+=1
-            # print(f"{iteration}  L'événement est une adsorption au site {evnt[0]}")
+            print(f"{iteration}  L'événement est une adsorption au site {evnt[0]}")
         if evnt[1]==0:
             Ng-=1     
-            # print(f"{iteration}  L'événement est une désorption au site {evnt[0]}")
+            print(f"{iteration}  L'événement est une désorption au site {evnt[0]}")
         
 
         # Étape 5 : Nouvelle configuration
